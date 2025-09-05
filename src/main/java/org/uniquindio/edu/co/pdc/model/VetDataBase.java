@@ -30,8 +30,9 @@ public class VetDataBase {
         
         if (p.isPresent()){
             throw new IllegalArgumentException("The pet with ID: " + newPet.getId() + " exist.");
+        } else{
+            pets.add(newPet);
         }
-        pets.add(newPet);
     }
 
     public ArrayList<Pet> showPets(){
@@ -46,8 +47,9 @@ public class VetDataBase {
             petAux.setName(newPet.getName());
             petAux.setAge(newPet.getAge());
             petAux.setRace(newPet.getRace());
+        } else {
+            throw new IllegalArgumentException("The pet with ID: " + newPet.getId() + " dont exist.");
         }
-        throw new IllegalArgumentException("The pet with ID: " + newPet.getId() + " dont exist.");
     }
 
     public void deletePet(Pet Pet){
@@ -55,9 +57,9 @@ public class VetDataBase {
 
         if (p.isPresent()){
             pets.remove(p.get());
+        } else{
+           throw new IllegalArgumentException("The pet with ID: " + Pet.getId() + " dont exist.");
         }
-        
-        throw new IllegalArgumentException("The pet with ID: " + Pet.getId() + " dont exist.");
     }
 
 
@@ -102,8 +104,9 @@ public class VetDataBase {
 
         if (v.isPresent()){
             veterinarians.remove(v.get());
+        } else{
+            throw new IllegalArgumentException("The veterinarian with ID: " + id + " dont exist.");
         }
-        throw new IllegalArgumentException("The veterinarian with ID: " + id + " dont exist.");
     }
     
 

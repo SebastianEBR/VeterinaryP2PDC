@@ -139,8 +139,8 @@ public class Main {
             switch(op){
                 case 1: showVets(veterinarians); break;
                 case 2: addVet(); break;
-                case 3: updateVet(); 
-                case 4: deleteVet(); 
+                case 3: updateVet(); break;
+                case 4: deleteVet(); break;
 
             }
 
@@ -186,12 +186,28 @@ public class Main {
 
 
     public static void updateVet(){
+        Scanner keyboard = new Scanner(System.in);
 
-        Veterinarian newVet = createVet();
-        database.updateVet(newVet);
+        System.out.println("join the ID; ");
+        String id = keyboard.next();
+        System.out.println("join the new name; ");
+        String name = keyboard.next();
+        System.out.println("join the new address; ");
+        String address = keyboard.next();
+        System.out.println("join the new phone; ");
+        String phone = keyboard.next();
+
+        Veterinarian newVetAux = new Veterinarian.Builder()
+                .id(id)
+                .name(name)
+                .address(address)
+                .phone(phone)
+                .build();
+
+        database.updateVet(newVetAux);
     }
 
-
+    //method to delete a veterinarian
     public static void deleteVet(){
         Scanner keyboard = new Scanner(System.in);
 
