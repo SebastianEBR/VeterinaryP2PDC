@@ -1,12 +1,10 @@
 package org.uniquindio.edu.co.pdc.app;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
-import org.uniquindio.edu.co.pdc.model.VetDataBase;
-import org.uniquindio.edu.co.pdc.model.Pet;
-import org.uniquindio.edu.co.pdc.model.PetFactory;
-import org.uniquindio.edu.co.pdc.model.Veterinarian;
+import org.uniquindio.edu.co.pdc.model.*;
 
 public class Main {
 
@@ -24,7 +22,7 @@ public class Main {
             System.out.println("****MENU****");
             System.out.println("1. Pets menu");
             System.out.println("2. Veterinarians menu");
-            System.out.println("5. Exit");
+            System.out.println("3. Exit");
 
             Scanner keyboard = new Scanner(System.in);
             System.out.println("Choose yor option: ");
@@ -34,7 +32,7 @@ public class Main {
                 case 1: petsMenu(database.showPets()); break;
                 case 2: veterinarianMenu(database.showVets()); break;
             }
-        }while(op != 5);
+        }while(op != 3);
     }
 
 
@@ -45,9 +43,11 @@ public class Main {
             System.out.println("****PETS MENU****");
             System.out.println("1. Show pets");
             System.out.println("2. add pets");
-            System.out.println("3. Show only Schnauzer");
-            System.out.println("4. count only Pincher");
-            System.out.println("5. Exit");
+            System.out.println("3. update pet");
+            System.out.println("4. delete pet");
+            System.out.println("5. Show only Schnauzer");
+            System.out.println("6. count only Pincher");
+            System.out.println("7. Exit");
 
             Scanner keyboard = new Scanner(System.in);
             System.out.println("ingrese su opcion: ");
@@ -56,11 +56,14 @@ public class Main {
             switch(op){
                 case 1: showPets(pets); break;
                 case 2: addPet(); break;
-                case 3: showSchnauzer(pets); break;
-                case 4: countPincher(pets); break;
+                case 3: updatePet();break;
+                case 4: deletePet(); break;
+                case 5: showSchnauzer(pets); break;
+                case 6: countPincher(pets); break;
+
 
             }
-        }while(op != 5);
+        }while(op != 7);
     }
 
 
@@ -81,8 +84,7 @@ public class Main {
         System.out.println("join the race; ");
         String race = keyboard.next();
 
-        Pet pet = PetFactory.createPet(type, id, name, age, race);
-        return pet;
+        return PetFactory.createPet(type, id, name, age, race);
     }
 
 
@@ -93,16 +95,64 @@ public class Main {
 
 
     public static void showPets(ArrayList<Pet> pets){
-        for (Pet p : pets) {
-            System.out.println(p.toString());
+        if(pets.isEmpty()){
+            System.out.println("First add a pet: :)");
+        }else{
+            for (Pet p : pets) {
+                System.out.println(p.toString());
+            }
         }
+    }
+
+
+    public static void updatePet(){
+        Scanner keyboard = new Scanner(System.in);
+
+        System.out.println("join the ID; ");
+        String id = keyboard.next();
+        System.out.println("join the new name; ");
+        String name = keyboard.next();
+        System.out.println("join the new age; ");
+        int age = keyboard.nextInt();
+        System.out.println("join the new race; ");
+        String race = keyboard.next();
+
+        Optional<Pet> petFound = database.searchPet(id);
+        if (petFound.isPresent() && petFound.get() instanceof Dog) {
+            Pet newPetAux = new Dog.Builder()
+                    .id(id)
+                    .name(name)
+                    .age(age)
+                    .race(race)
+                    .build();
+            database.updatePet(newPetAux);
+        }else if(petFound.isPresent() && petFound.get() instanceof Cat){
+            Pet newPetAux = new Cat.Builder()
+                    .id(id)
+                    .name(name)
+                    .age(age)
+                    .race(race)
+                    .build();
+            database.updatePet(newPetAux);
+        }
+    }
+
+
+    public  static void deletePet(){
+        Scanner keyboard = new Scanner(System.in);
+
+        System.out.println("Join the pet´s id to delete: ");
+        String id = keyboard.next();
+
+        database.deletePet(id);
+
     }
 
 
     public static void showSchnauzer(ArrayList<Pet> pets){
         for (Pet p : pets) {
-            if (p.getRace().toLowerCase().equals("schnauzer")) {
-                System.out.println(p.toString());
+            if (p.getRace().equalsIgnoreCase("schnauzer")) {
+                System.out.println(p);
             }
         }
     }
@@ -111,13 +161,12 @@ public class Main {
     public static void countPincher(ArrayList<Pet> pets){
         int cPincher = 0;
         for (Pet p : pets) {
-            if (p.getRace().toLowerCase().equals("pincher")) {
+            if (p.getRace().equalsIgnoreCase("pincher")) {
                 cPincher ++;
             }
         }
         System.out.println("Hay " + cPincher + " pinchers");
     }
-
 
 
     // Veterinarian Menu
@@ -161,14 +210,12 @@ public class Main {
         System.out.println("join the phone; ");
         String phone = keyboard.next();
 
-        Veterinarian vet = new Veterinarian.Builder()
+        return new Veterinarian.Builder()
                 .id(id)
                 .name(name)
                 .address(address)
                 .phone(phone)
                 .build();
-
-        return vet;
     }
 
 

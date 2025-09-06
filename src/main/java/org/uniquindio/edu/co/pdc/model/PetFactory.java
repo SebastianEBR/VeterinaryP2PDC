@@ -6,18 +6,18 @@ public class PetFactory {
         switch(type.toUpperCase()){
             case "DOG": 
                 return new Dog.Builder()
-                .id(id)
-                .name(name)
-                .age(age)
-                .race(race)
-                .build();
+                        .id(id)
+                        .name(name)
+                        .age(age)
+                        .race(race)
+                        .build();
             case "CAT":
-            return new Cat.Builder()
-                .id(id)
-                .name(name)
-                .age(age)
-                .race(race)
-                .build();
+                return new Cat.Builder()
+                        .id(id)
+                        .name(name)
+                        .age(age)
+                        .race(race)
+                        .build();
             default:
                 throw new IllegalArgumentException("The type: " + type + " is not valid");
         }

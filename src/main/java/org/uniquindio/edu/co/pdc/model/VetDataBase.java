@@ -7,8 +7,8 @@ public class VetDataBase {
 
     private static VetDataBase vetdbInstance;
 
-    private ArrayList<Pet> pets;
-    private ArrayList<Veterinarian> veterinarians;
+    private final ArrayList<Pet> pets;
+    private final ArrayList<Veterinarian> veterinarians;
 
 
     private VetDataBase() {
@@ -44,6 +44,7 @@ public class VetDataBase {
         
         if (p.isPresent()){
             Pet petAux = p.get();
+
             petAux.setName(newPet.getName());
             petAux.setAge(newPet.getAge());
             petAux.setRace(newPet.getRace());
@@ -52,13 +53,13 @@ public class VetDataBase {
         }
     }
 
-    public void deletePet(Pet Pet){
-       Optional<Pet> p = searchPet(Pet.getId());
+    public void deletePet(String id){
+       Optional<Pet> p = searchPet(id);
 
         if (p.isPresent()){
             pets.remove(p.get());
         } else{
-           throw new IllegalArgumentException("The pet with ID: " + Pet.getId() + " dont exist.");
+           throw new IllegalArgumentException("The pet with ID: " + id + " dont exist.");
         }
     }
 
@@ -69,7 +70,7 @@ public class VetDataBase {
     }
 
     public String showVet(Veterinarian vet){
-        String infoVet = "";
+        String infoVet;
         Optional<Veterinarian> v = searchVet(vet.getId());
 
         if (v.isPresent()){
@@ -110,11 +111,11 @@ public class VetDataBase {
     }
     
 
-    private Optional<Pet> searchPet(String id){
+    public Optional<Pet> searchPet(String id){
         return pets.stream().filter(p -> p.getId().equals(id)).findFirst();
     }
 
-    private Optional<Veterinarian> searchVet(String id){
+    public Optional<Veterinarian> searchVet(String id){
         return veterinarians.stream().filter(v -> v.getId().equals(id)).findFirst();
     }
     
